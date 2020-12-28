@@ -1,3 +1,3 @@
 # nfl-shiny
 
-Shiny application to view baic nfl stats
+Shiny application to view basic nfl stats
