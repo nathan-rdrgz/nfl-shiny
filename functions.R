@@ -30,6 +30,7 @@ getStatDT <- function(pos_type,x){
          'Rushing' = GetRushers(x)) 
   return(dt)
 }
+
 # Individual Data --------------------------------------------------------------
 GetReceivers <- function(x, melted = T){
   x <- copy(x)
@@ -73,6 +74,8 @@ GetPassers   <- function(x, melted = T){
            avg_air_yards = round(mean(air_yards, na.rm = T), 2),
            success_rate = round(mean(success, na.rm = T), 2),
            yards_gained = round(sum(yards_gained, na.rm = T), 2),
+           qb_hits = sum(qb_hit, na.rm = T),
+           tds = sum(ifelse(pass_attempt == 1, touchdown, 0), na.rm = T),
            epa = round(mean(qb_epa, na.rm = T), 2)
          ), 
          .(name = passer, week, posteam, season)]

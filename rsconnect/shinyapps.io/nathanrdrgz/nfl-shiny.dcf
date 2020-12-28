@@ -1,0 +1,12 @@
+name: nfl-shiny
+title: nfl-shiny
+username:
+account: nathanrdrgz
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3433216
+bundleId: 4036634
+url: https://nathanrdrgz.shinyapps.io/nfl-shiny/
+when: 1609192228.97824
+asMultiple: FALSE
+asStatic: FALSE
