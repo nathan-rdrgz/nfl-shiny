@@ -18,6 +18,6 @@ teamList <<- DT[!is.na(posteam), unique(posteam)]
 teamList <<- teamList[order(teamList)]
 
 # Stat variables
-passingStats   <<- GetPassers(DT[posteam==teamList[1]])[, unique(variable)]
-rushingStats   <<- GetRushers(DT[posteam==teamList[1]])[, unique(variable)]
-receivingStats <<- GetReceivers(DT[posteam==teamList[1]])[, unique(variable)]
+passingStats   <<- GetWklyPassers(DT[posteam==teamList[1]])[, unique(variable)]
+rushingStats   <<- GetWklyRushers(DT[posteam==teamList[1]])[, unique(variable)]
+receivingStats <<- GetWklyReceivers(DT[posteam==teamList[1]])[,unique(variable)]

@@ -12,20 +12,29 @@ shiny::shinyServer(function(session, input, output) {
   # Main plot for displaying stat trends ---------------------------------------
   output$main_plot <- renderPlotly({
     # Inputs
-    minGames  <- input$minGames
-    inclTrend <- input$trend_line
-    positions <- input$skillPos
-    statToPlot <-input$stat
+    minGames   <- input$minGames
+    inclTrend  <- input$trend_line
+    positions  <- input$skillPos
+    statToPlot <- input$stat
     teamToPlot <- input$teamList
+    homeTeam   <- input$home_team
+    gbTime <- input$garbage_time
     
     # filtered data
-    posDT <- getStatDT(pos_type = positions, x = DT)
+    if(gbTime){
+      DT2 <- DT[game_seconds_remaining > 120 & wp < .80 & wp > .20]
+    } else {
+      DT2 <- copy(DT)
+    }
+    posDT <- getStatDT(pos_type = positions, x = DT2)
     posDT <- posDT[N >= minGames]
     posDT <- posDT[variable == statToPlot]
     posDT <- posDT[posteam %chin% teamToPlot]
+    
     # plot
     p <- ggplot(data = posDT, 
                 mapping = aes(x = week, y = value, colour = name)) +
+      labs(x = 'Week', y = statToPlot) +
       geom_point() +
       geom_line() +
       theme_bw()

@@ -25,14 +25,14 @@ getStatCategories <- function(x){
 
 getStatDT <- function(pos_type,x){
   dt <- switch(pos_type,
-         'Passing' = GetPassers(x), 
-         'Receiving' = GetReceivers(x), 
-         'Rushing' = GetRushers(x)) 
+         'Passing' = GetWklyPassers(x), 
+         'Receiving' = GetWklyReceivers(x), 
+         'Rushing' = GetWklyRushers(x)) 
   return(dt)
 }
 
 # Individual Data --------------------------------------------------------------
-GetReceivers <- function(x, melted = T){
+GetWklyReceivers <- function(x, melted = T){
   x <- copy(x)
   x <- x[!is.na(receiver_id) & season_type == 'REG', 
          .(plays = .N,
@@ -50,12 +50,13 @@ GetReceivers <- function(x, melted = T){
   }
   return(x)
 }
-GetRushers   <- function(x, melted = T){
+GetWklyRushers   <- function(x, melted = T){
   x <- copy(x)
   x <- x[!is.na(rusher_id) & season_type == 'REG', 
          .(plays = .N,
            success_rate = round(mean(success, na.rm = T), 2),
            yards_gained = round(sum(yards_gained, na.rm = T), 2),
+           touchdowns = sum(ifelse(rush_attempt == 1, touchdown, 0)),
            epa = round(mean(epa, na.rm = T), 2)
          ), 
          .(name = rusher, week, posteam, season)]
@@ -66,7 +67,7 @@ GetRushers   <- function(x, melted = T){
     }
   return(x)
 }
-GetPassers   <- function(x, melted = T){
+GetWklyPassers   <- function(x, melted = T){
   x <- copy(x)
   x <- x[!is.na(passer_id) & season_type == 'REG', 
          .(plays = .N,
@@ -76,6 +77,7 @@ GetPassers   <- function(x, melted = T){
            yards_gained = round(sum(yards_gained, na.rm = T), 2),
            qb_hits = sum(qb_hit, na.rm = T),
            tds = sum(ifelse(pass_attempt == 1, touchdown, 0), na.rm = T),
+           interceptions = sum(ifelse(pass_attempt==1,interception, 0),na.rm=T),
            epa = round(mean(qb_epa, na.rm = T), 2)
          ), 
          .(name = passer, week, posteam, season)]
@@ -86,5 +88,6 @@ GetPassers   <- function(x, melted = T){
   }
   return(x)
 }
+
 # Plot functions ---------------------------------------------------------------
 
