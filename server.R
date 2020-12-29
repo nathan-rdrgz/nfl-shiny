@@ -10,10 +10,9 @@ shiny::shinyServer(function(session, input, output) {
                  selected = statChoices[1])
   })
   # Main plot for displaying stat trends ---------------------------------------
-  output$main_plot <- renderPlotly({
+  filtered_data <- reactive({
     # Inputs
     minGames   <- input$minGames
-    inclTrend  <- input$trend_line
     positions  <- input$skillPos
     statToPlot <- input$stat
     teamToPlot <- input$teamList
@@ -22,19 +21,24 @@ shiny::shinyServer(function(session, input, output) {
     
     # filtered data
     if(gbTime){
-      DT2 <- DT[game_seconds_remaining > 120 & wp < .80 & wp > .20]
+      DT2 <- DT[game_seconds_remaining > 120 & (wp < .85 | wp > .15)]
     } else {
       DT2 <- copy(DT)
     }
-    posDT <- getStatDT(pos_type = positions, x = DT2)
+    posDT <- GetWklyStatDT(pos_type = positions, x = DT2)
     posDT <- posDT[N >= minGames]
     posDT <- posDT[variable == statToPlot]
     posDT <- posDT[posteam %chin% teamToPlot]
+    posDT
+  })
+  output$main_plot <- renderPlotly({
+    # inputs
+    inclTrend  <- input$trend_line
     
     # plot
-    p <- ggplot(data = posDT, 
+    p <- ggplot(data = filtered_data(), 
                 mapping = aes(x = week, y = value, colour = name)) +
-      labs(x = 'Week', y = statToPlot) +
+      labs(x = 'Week', y = as.character(filtered_data()[1, variable])) +
       geom_point() +
       geom_line() +
       theme_bw()
@@ -42,6 +46,17 @@ shiny::shinyServer(function(session, input, output) {
     p <- ggplotly(p)
     p
   })
+  output$sumary_table <- DT::renderDT(
+    expr = {filtered_data()},
+    filter = "top",
+    options = list(pageLength = 25,
+                   dom = 'ltp'))
+  # Season summary table -------------------------------------------------------
+  output$season_summary <- renderDT({
+    posDT <- GetSeasonStatDT(pos_type = input$skillPos, x = DT)
+  },    
+  filter = "top",
+)
   # Output table for raw data of selected columns ------------------------------
   output$allData <- DT::renderDT(
     expr = { DT[!is.na(posteam) & play_type %in% c('run', 'pass'), 

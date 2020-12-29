@@ -8,7 +8,8 @@ navbarPage(
              sidebarPanel(width = 4,
                           selectInput(
                             inputId = 'skillPos',
-                            label = 'Select Offensive Category',
+                            label = 'Select Offensive Category (also affects 
+                            Season Summary Tab)',
                             choices = c('Passing', 'Receiving', 'Rushing'),
                             selected = 'Passing',
                             multiple = FALSE),
@@ -31,8 +32,8 @@ navbarPage(
                           checkboxInput(
                             inputId = 'garbage_time',
                             label = 'Remove plays from garbage time (last 2 
-                            mins of game and win probabiilty less than 80% or 
-                            greater than 20%)',
+                            mins of game and win probabiilty less than 85% or 
+                            greater than 15%)',
                             value = FALSE
                           ),
                           sliderInput(
@@ -45,12 +46,14 @@ navbarPage(
                             )
            ),
            mainPanel(
-             plotlyOutput('main_plot')
+             plotlyOutput('main_plot'),
+             h2('Game by game stats which build the above plot.'),
+             br(),
+             DT::dataTableOutput('sumary_table')
              )
            )),
-  tabPanel("Summary", "",
-           DT::dataTableOutput('sumary_table')),
-  tabPanel("Table", "Raw data",
+  tabPanel("Season Summary", "", DT::dataTableOutput(('season_summary'))),
+  tabPanel("Raw data", "",
            DT::dataTableOutput('allData')
            )
   )

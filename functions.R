@@ -23,7 +23,7 @@ getStatCategories <- function(x){
          'Rushing' = rushingStats) 
 }
 
-getStatDT <- function(pos_type,x){
+GetWklyStatDT <- function(pos_type,x){
   dt <- switch(pos_type,
          'Passing' = GetWklyPassers(x), 
          'Receiving' = GetWklyReceivers(x), 
@@ -31,7 +31,15 @@ getStatDT <- function(pos_type,x){
   return(dt)
 }
 
-# Individual Data --------------------------------------------------------------
+GetSeasonStatDT <- function(pos_type,x){
+  dt <- switch(pos_type,
+               'Passing' = GetSeasonPassers(x), 
+               'Receiving' = GetSeasonReceivers(x), 
+               'Rushing' = GetSeasonRushers(x)) 
+  return(dt)
+}
+
+# Weekly Data ------------------------------------------------------------------
 GetWklyReceivers <- function(x, melted = T){
   x <- copy(x)
   x <- x[!is.na(receiver_id) & season_type == 'REG', 
@@ -89,5 +97,47 @@ GetWklyPassers   <- function(x, melted = T){
   return(x)
 }
 
+# Season Data ------------------------------------------------------------------
+GetSeasonReceivers <- function(x){
+  x <- copy(x)
+  x <- x[!is.na(receiver_id) & season_type == 'REG', 
+         .(plays = .N,
+           total_air_yards = round(sum(air_yards, na.rm = T), 2),
+           avg_air_yards = round(mean(air_yards, na.rm = T), 2),
+           success_rate = round(mean(success, na.rm = T), 2),
+           yards_gained = round(sum(yards_gained, na.rm = T), 2),
+           epa = round(mean(epa, na.rm = T), 2)
+         ), 
+         .(name = receiver, posteam, season)]
+  return(x)
+}
+GetSeasonRushers   <- function(x){
+  x <- copy(x)
+  x <- x[!is.na(rusher_id) & season_type == 'REG', 
+         .(plays = .N,
+           success_rate = round(mean(success, na.rm = T), 2),
+           yards_gained = round(sum(yards_gained, na.rm = T), 2),
+           touchdowns = sum(ifelse(rush_attempt == 1, touchdown, 0)),
+           epa = round(mean(epa, na.rm = T), 2)
+         ), 
+         .(name = rusher, posteam, season)]
+  return(x)
+}
+GetSeasonPassers   <- function(x){
+  x <- copy(x)
+  x <- x[!is.na(passer_id) & season_type == 'REG', 
+         .(plays = .N,
+           total_air_yards = round(sum(air_yards, na.rm = T), 2),
+           avg_air_yards = round(mean(air_yards, na.rm = T), 2),
+           success_rate = round(mean(success, na.rm = T), 2),
+           yards_gained = round(sum(yards_gained, na.rm = T), 2),
+           qb_hits = sum(qb_hit, na.rm = T),
+           tds = sum(ifelse(pass_attempt == 1, touchdown, 0), na.rm = T),
+           interceptions = sum(ifelse(pass_attempt==1,interception, 0),na.rm=T),
+           epa = round(mean(qb_epa, na.rm = T), 2)
+         ), 
+         .(name = passer, posteam, season)]
+  return(x)
+}
 # Plot functions ---------------------------------------------------------------
 
