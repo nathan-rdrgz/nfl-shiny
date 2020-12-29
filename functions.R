@@ -45,6 +45,7 @@ GetWklyReceivers <- function(x, melted = T){
   x <- x[!is.na(receiver_id) & season_type == 'REG', 
          .(plays = .N,
            total_air_yards = round(sum(air_yards, na.rm = T), 2),
+           yac = sum(yards_after_catch, na.rm = T),
            avg_air_yards = round(mean(air_yards, na.rm = T), 2),
            success_rate = round(mean(success, na.rm = T), 2),
            yards_gained = round(sum(yards_gained, na.rm = T), 2),
@@ -107,6 +108,7 @@ GetSeasonReceivers <- function(x){
          .(plays = .N,
            total_air_yards = round(sum(air_yards, na.rm = T), 2),
            avg_air_yards = round(mean(air_yards, na.rm = T), 2),
+           yac = sum(yards_after_catch, na.rm = T),
            success_rate = round(mean(success, na.rm = T), 2),
            yards_gained = round(sum(yards_gained, na.rm = T), 2),
            epa = round(mean(epa, na.rm = T), 2)
