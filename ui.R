@@ -55,5 +55,7 @@ navbarPage(
   tabPanel("Season Summary", "", DT::dataTableOutput(('season_summary'))),
   tabPanel("Raw data", "",
            DT::dataTableOutput('allData')
-           )
+           ),
+  tabPanel('About', 
+           p('Built by: https://www.linkedin.com/in/nathanjr/'))
   )

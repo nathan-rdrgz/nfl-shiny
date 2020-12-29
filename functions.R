@@ -50,11 +50,12 @@ GetWklyReceivers <- function(x, melted = T){
            yards_gained = round(sum(yards_gained, na.rm = T), 2),
            epa = round(mean(epa, na.rm = T), 2)
          ), 
-         .(name = receiver, week, posteam, season)]
+         .(name = receiver, week, posteam, season, receiver_id)]
   if(melted){
-    x[, N := .N, name]
+    x[, N := .N, receiver_id]
     x <- melt.data.table(x, 
-                         id.vars = c('name', 'week', 'posteam', 'season', 'N'))
+                         id.vars = c('name', 'week', 'posteam', 'season', 'N',
+                                     'receiver_id'))
   }
   return(x)
 }
@@ -67,11 +68,12 @@ GetWklyRushers   <- function(x, melted = T){
            touchdowns = sum(ifelse(rush_attempt == 1, touchdown, 0)),
            epa = round(mean(epa, na.rm = T), 2)
          ), 
-         .(name = rusher, week, posteam, season)]
+         .(name = rusher, week, posteam, season,rusher_id)]
   if(melted){
-    x[, N := .N, name]
+    x[, N := .N, rusher_id]
     x <- melt.data.table(x, 
-                         id.vars = c('name', 'week', 'posteam', 'season', 'N'))
+                         id.vars = c('name', 'week', 'posteam', 'season', 'N',
+                                     'rusher_id'))
     }
   return(x)
 }
@@ -88,11 +90,12 @@ GetWklyPassers   <- function(x, melted = T){
            interceptions = sum(ifelse(pass_attempt==1,interception, 0),na.rm=T),
            epa = round(mean(qb_epa, na.rm = T), 2)
          ), 
-         .(name = passer, week, posteam, season)]
+         .(name = passer, week, posteam, season, passer_id)]
   if(melted){
-    x[, N := .N, name]
+    x[, N := .N, passer_id]
     x <- melt.data.table(x, 
-                         id.vars = c('name', 'week', 'posteam', 'season', 'N'))
+                         id.vars = c('name', 'week', 'posteam', 'season', 'N',
+                                     'passer_id'))
   }
   return(x)
 }

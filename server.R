@@ -47,7 +47,10 @@ shiny::shinyServer(function(session, input, output) {
     p
   })
   output$sumary_table <- DT::renderDT(
-    expr = {filtered_data()},
+    expr = {
+      filtered_data()[, .(name, week, N, season, team = posteam, 
+                          variable, value)]
+      },
     filter = "top",
     options = list(pageLength = 25,
                    dom = 'ltp'))
