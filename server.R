@@ -148,11 +148,13 @@ shiny::shinyServer(function(session, input, output) {
                               `Median Points` = wk14DT$median_pts)
       playersToAvoid <- newDT[Played<=minGamesPlayed | 
                                 `Injury Indicator`%in% c("IR", "O"), Name]
-      output$all_preds <- renderDT({resultsDT[!Name %chin% playersToAvoid]
+      output$all_preds <- renderDT({
+        resultsDT[!Name %chin% playersToAvoid][!Team %in%rg_teamList]
         }, filter = 'top')
       
       # perform optimzation ----------------------------------------------------
       resultsDT2 <- resultsDT[!Name %chin% playersToAvoid]
+      resultsDT2 <- resultsDT2[!Team %in%rg_teamList]
       resultsDT2 <- resultsDT2[`Median Points` > minPoints2]
       resultsDT2[, pred_rank := frank(-Predicted), .(Pos)]
       resultsDT2[, team_pct := sum(Predicted, na.rm = T), .(Team)]
