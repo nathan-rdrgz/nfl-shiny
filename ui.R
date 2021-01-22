@@ -2,6 +2,7 @@
 navbarPage(
   "Wasted Productivity",
   theme = shinythemes::shinytheme("sandstone"),
+  #position = "fixed-top",
   # nflfastR data --------------------------------------------------------------
   tabPanel("Offense - nflfastR",
            "",
@@ -37,18 +38,6 @@ navbarPage(
                             value = FALSE
                           ),
                           checkboxInput(
-                            inputId = 'offensive_penalties',
-                            label = 'Remove plays where offense 
-                            commited penaltiy',
-                            value = FALSE
-                          ),
-                          checkboxInput(
-                            inputId = 'defensive_penatlies',
-                            label = 'Remove plays where defense 
-                            commited penalties',
-                            value = FALSE
-                          ),
-                          checkboxInput(
                             inputId = 'garbage_time',
                             label = 'Remove plays from garbage time (last 2 
                             mins of game and win probabiilty less than 85% or 
@@ -61,7 +50,8 @@ navbarPage(
                             min = 1,
                             max = ifelse(currentWeek-1<=0,1,currentWeek-1),
                             step = 1,
-                            value = ifelse(currentWeek-2<=0,1,currentWeek-2)
+                            value = ifelse(currentWeek > 17,
+                                           10, ifelse(currentWeek-2<=0,1,currentWeek-2))
                             )
            ),
            mainPanel(
@@ -71,67 +61,88 @@ navbarPage(
              DT::dataTableOutput('sumary_table')
              )
            )),
-  tabPanel("Season Summary - nflfastr", "", 
+  tabPanel("Offense Season Summary - nflfastr", "", 
+
            DT::dataTableOutput(('season_summary'))),
+  tabPanel("Defense - nflfastR",
+           "",
+           sidebarLayout(
+             sidebarPanel(selectizeInput(
+               inputId  = 'defTeamList', 
+               label    = 'Select Defensive unit',
+               choices  = teamList,
+               selected = teamList[1:2],
+               multiple = TRUE),
+               selectInput(
+                 inputId = 'defStat',
+                 label = 'Select Stat',
+                 choices = defStatsCategories,
+                 selected = defStatsCategories[1]),
+               checkboxInput(inputId = 'def_trend_line', 
+                             label = 'Include Trend line',
+                             value = FALSE)),
+             mainPanel(plotlyOutput('def_plot')))
+           ),
   # rotoguru fanduel data ------------------------------------------------------
   tabPanel('FanDuel Optimizations',
-    '',
     sidebarLayout(
       sidebarPanel(
-        width = 4,
+        width = 4#,
       # teams to exclude
-      selectizeInput(
-        inputId  = 'rgteamList', 
-        label    = 'Select teams to exclude from your lineups, if any',
-        choices  = RGteamList,
-        selected = NULL,
-        multiple = TRUE),
-      # min avg points to exclude
-      sliderInput(
-        inputId = 'minPoints',
-        label = 'Remove players who have not scored above a points threshold
-                 in a single game',
-        min = 0,
-        max = 10,
-        step = 1,
-        value = 0
-      ),
-      # Min games played removed
-      sliderInput(
-        inputId = 'min_games_played',
-        label = 'Include players who have played a minumum number of games',
-        min = 1,
-        max = currentWeek - 2,
-        step = 1,
-        value = 1
-      ),
-      # min salaries to remove
-      # Salary Cap
-      sliderInput(
-        inputId = 'salary_cap',
-        label = 'Indicate the salary cap limit you wish to optimize with',
-        min = 40000,
-        max = 60000,
-        step = 500,
-        value = 59000
-      ),
-      # optimize button
-      actionButton(
-        inputId = 'getOptimal', 
-        label = "CLick to get 'Optimal' Lineup")
+      # selectizeInput(
+      #   inputId  = 'rgteamList', 
+      #   label    = 'Select teams to exclude from your lineups, if any',
+      #   choices  = RGteamList,
+      #   selected = NULL,
+      #   multiple = TRUE),
+      # # min avg points to exclude
+      # sliderInput(
+      #   inputId = 'minPoints',
+      #   label = 'Remove players who have not scored above a points threshold
+      #            in a single game',
+      #   min = 0,
+      #   max = 10,
+      #   step = 1,
+      #   value = 0
+      # ),
+      # # Min games played removed
+      # sliderInput(
+      #   inputId = 'min_games_played',
+      #   label = 'Include players who have played a minumum number of games',
+      #   min = 1,
+      #   max = currentWeek - 2,
+      #   step = 1,
+      #   value = 1
+      # ),
+      # # min salaries to remove
+      # # Salary Cap
+      # sliderInput(
+      #   inputId = 'salary_cap',
+      #   label = 'Indicate the salary cap limit you wish to optimize with',
+      #   min = 40000,
+      #   max = 60000,
+      #   step = 500,
+      #   value = 59000
+      # ),
+      # # optimize button
+      # actionButton(
+      #   inputId = 'getOptimal', 
+      #   label = "CLick to get 'Optimal' Lineup")
     ),
     mainPanel(
       # Predicted points, Actual points, salary cap %
       # table of optimized lineup
-      h2(paste0('Optimal Lineup* - Week ', currentWeek + 1)),
-      p('*May not consider injured or suspended players'),
-      p('*Only an initial guide towards creating a DFS team'),
-      DT::dataTableOutput('optimal_results'),
-      # All Predictions
-      h2('All Predictions'),
-      DT::dataTableOutput('all_preds')
+      h2(paste0('Predictions and lineup optimizations will be back for the \'21 season')),
+      # h2(paste0('Optimal Lineup* - Saturday Playoffs Main Slate')),
+      # p('*May not consider injured or suspended players'),
+      # p('*Only an initial guide towards creating a DFS team'),
+      # DT::dataTableOutput('optimal_results'),
+      # # All Predictions
+      # h2('All Predictions'),
+      # DT::dataTableOutput('all_preds')
       
-    ))),
+    ))
+    ),
   # Raw Data tab ---------------------------------------------------------------
   #tabPanel("Raw data", "",
   #         DT::dataTableOutput('allData')
@@ -139,10 +150,24 @@ navbarPage(
   
   # About tab ------------------------------------------------------------------
   tabPanel('About', 
-           p(' • Built using nflfastR and RotoGuru data'),
            br(),
-           p(' • Predictions derived from simple xgboost model using rolling'),
-           p('point metrics of individual player, team and opposing defense.'),
            br(),
-           p(' • Author: https://www.linkedin.com/in/nathanjr/'))
-  )
+           br(),
+           br(),
+           p('• Built using nflfastR and RotoGuru data'),
+           br(),
+           p(paste0('• Predictions derived from simple xgboost model using',
+                    '\n',
+                    'rolling point metrics and salaries of individual player,'
+                    ,'\n',
+                    'teams and opposing defenses.')),
+           br(),
+           p('• Lineups constructed using linear optimzation.'),
+           br(),
+           p('• Author: Nathan Rodriguez')
+           ,a(href="https://www.linkedin.com/in/nathanjr/", "LinkedIn")
+           ,br()
+           ,a(href="https://www.instagram.com/nathanjrodriguezz/", "Instagram")
+           ,br()
+           ,a(href="https://twitter.com/nathan_rdrgz", "Twitter")
+  ))

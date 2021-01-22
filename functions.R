@@ -148,6 +148,7 @@ GetSeasonPassers   <- function(x){
 }
 # Plot functions ---------------------------------------------------------------
 MainPlot <- function(xDT, inclTrend){
+  #browser()
   # plot
   p <- ggplot(data = xDT, 
               mapping = aes(x = week, y = value, colour = name)) +
@@ -352,3 +353,40 @@ rgNames <<- c('Gallman, Wayne', 'Parham, Donald',
               'McFarland, Anthony',
               'McCloud, Ray-Ray',
               '')
+
+# Get defense stats ------------------------------------------------------------
+GetDefDT <- function(x){
+  x <- copy(x)
+  x <- x[!is.na(defteam), 
+    .(yards_given_up = sum(ifelse(penalty!=1, yards_gained, 0), na.rm = T)
+      ,pass_yards = sum(ifelse(
+        pass_attempt==1&penalty!=1, yards_gained, 0),na.rm=T)
+      ,rush_yards = sum(ifelse(
+        rush_attempt==1&penalty!=1, yards_gained, 0),na.rm=T)
+      ,yac_allowed = sum(yards_after_catch, na.rm = T)
+      ,air_yds_allowed = sum(air_yards, na.rm = T)
+      ,pass_tds = sum(ifelse(pass_attempt==1,touchdown,0),na.rm=T)
+      ,rush_tds = sum(ifelse(rush_attempt==1,touchdown,0),na.rm=T)
+      ,rush_yards_allowed_right = sum(
+        ifelse(
+          penalty!=1&rush_attempt==1&run_location=='right',yards_gained, 0),
+        na.rm = T)
+      ,rush_yards_allowed_left = sum(
+        ifelse(
+          penalty!=1&rush_attempt==1&run_location=='left',yards_gained, 0),
+        na.rm = T)
+      ,rush_yards_allowed_center = sum(
+        ifelse(
+          penalty!=1&rush_attempt==1&run_location=='middle',yards_gained, 0),
+        na.rm = T)
+      ,INTs = sum(ifelse(penalty!=1, interception, 0), na.rm = T)
+      ,sacks = sum(ifelse(penalty!=1, sack, 0), na.rm = T)
+      ,penalties_commited = sum(ifelse(penalty==1,defPenalty==1,0), na.rm = T)
+      ,def_penlaty_yards = sum(
+        ifelse(penalty==1&defPenalty==1, penalty_yards, 0), na.rm = T)
+    ), 
+    .(team = defteam, Oppt = posteam,week)][order(team, week)]
+  
+  x <- melt.data.table(x, id.vars = c('team', 'week', 'Oppt'))
+  return(x)
+}

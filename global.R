@@ -27,11 +27,15 @@ passingStats   <<- GetWklyPassers(DT[posteam==teamList[1]])[, unique(variable)]
 rushingStats   <<- GetWklyRushers(DT[posteam==teamList[1]])[, unique(variable)]
 receivingStats <<- GetWklyReceivers(DT[posteam==teamList[1]])[,unique(variable)]
 
+# get defense stats
+defDT <<- GetDefDT(DT)
+defStatsCategories <<- defDT[, unique(variable)]
+
 # Rotoguru data ----------------------------------------------------------------
 currentWeek <<- DT[, max(week)]
-rgDT <<- getRGData(currentWeek)
-
-RGteamList <<- rgDT[, unique(Team)]
-RGteamList <<- RGteamList[order(RGteamList)]
+# rgDT <<- getRGData(currentWeek)
+# 
+# RGteamList <<- rgDT[, unique(Team)]
+# RGteamList <<- RGteamList[order(RGteamList)]
   
   
