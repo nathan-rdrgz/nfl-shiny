@@ -87,59 +87,59 @@ navbarPage(
   tabPanel('FanDuel Optimizations',
     sidebarLayout(
       sidebarPanel(
-        width = 4#,
-      # teams to exclude
-      # selectizeInput(
-      #   inputId  = 'rgteamList', 
-      #   label    = 'Select teams to exclude from your lineups, if any',
-      #   choices  = RGteamList,
-      #   selected = NULL,
-      #   multiple = TRUE),
-      # # min avg points to exclude
-      # sliderInput(
-      #   inputId = 'minPoints',
-      #   label = 'Remove players who have not scored above a points threshold
-      #            in a single game',
-      #   min = 0,
-      #   max = 10,
-      #   step = 1,
-      #   value = 0
-      # ),
-      # # Min games played removed
-      # sliderInput(
-      #   inputId = 'min_games_played',
-      #   label = 'Include players who have played a minumum number of games',
-      #   min = 1,
-      #   max = currentWeek - 2,
-      #   step = 1,
-      #   value = 1
-      # ),
-      # # min salaries to remove
-      # # Salary Cap
-      # sliderInput(
-      #   inputId = 'salary_cap',
-      #   label = 'Indicate the salary cap limit you wish to optimize with',
-      #   min = 40000,
-      #   max = 60000,
-      #   step = 500,
-      #   value = 59000
-      # ),
-      # # optimize button
-      # actionButton(
-      #   inputId = 'getOptimal', 
-      #   label = "CLick to get 'Optimal' Lineup")
+        width = 4,
+       # teams to exclude
+       selectizeInput(
+         inputId  = 'rgteamList', 
+         label    = 'Select teams to exclude from your lineups, if any',
+         choices  = RGteamList,
+         selected = NULL,
+         multiple = TRUE),
+       # min avg points to exclude
+       sliderInput(
+         inputId = 'minPoints',
+         label = 'Set miniumum points threshold, i.e., 
+         remove players who have not scored above a x points in a single game',
+         min = 0,
+         max = 10,
+         step = 1,
+         value = 0
+       ),
+       # Min games played removed
+       sliderInput(
+         inputId = 'min_games_played',
+         label = 'Include only players who have played a minumum number of games',
+         min = 1,
+         max = currentWeek - 2,
+         step = 1,
+         value = 1
+       ),
+       # min salaries to remove
+       # Salary Cap
+       sliderInput(
+         inputId = 'salary_cap',
+         label = 'Indicate the salary cap limit you wish to optimize with',
+         min = 40000,
+         max = 60000,
+         step = 500,
+         value = 59000
+       ),
+       # optimize button
+       actionButton(
+         inputId = 'getOptimal', 
+         label = "CLick to get 'Optimal' Lineup")
     ),
     mainPanel(
       # Predicted points, Actual points, salary cap %
       # table of optimized lineup
-      h2(paste0('Predictions and lineup optimizations will be back for the \'21 season')),
-      # h2(paste0('Optimal Lineup* - Saturday Playoffs Main Slate')),
-      # p('*May not consider injured or suspended players'),
-      # p('*Only an initial guide towards creating a DFS team'),
-      # DT::dataTableOutput('optimal_results'),
-      # # All Predictions
-      # h2('All Predictions'),
-      # DT::dataTableOutput('all_preds')
+      #h2(paste0('Predictions and lineup optimizations will be back for the \'21 season')),
+       h2(paste0('Optimal Lineup* - Saturday Playoffs Main Slate')),
+       p('*May not consider injured or suspended players'),
+       p('*Only an initial guide towards creating a DFS team'),
+       DT::dataTableOutput('optimal_results'),
+       # All Predictions
+       h2('All Predictions'),
+       DT::dataTableOutput('all_preds')
       
     ))
     ),

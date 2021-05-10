@@ -33,9 +33,9 @@ defStatsCategories <<- defDT[, unique(variable)]
 
 # Rotoguru data ----------------------------------------------------------------
 currentWeek <<- DT[, max(week)]
-# rgDT <<- getRGData(currentWeek)
-# 
-# RGteamList <<- rgDT[, unique(Team)]
-# RGteamList <<- RGteamList[order(RGteamList)]
+rgDT <<- getRGData(currentWeek)
+ 
+RGteamList <<- rgDT[, unique(Team)]
+RGteamList <<- RGteamList[order(RGteamList)]
   
   
