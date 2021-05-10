@@ -132,7 +132,7 @@ navbarPage(
     mainPanel(
       # Predicted points, Actual points, salary cap %
       # table of optimized lineup
-      #h2(paste0('Predictions and lineup optimizations will be back for the \'21 season')),
+      h1(paste0('Predictions and lineup optimizations will be back for the \'21 season')),
        h2(paste0('Optimal Lineup* - Saturday Playoffs Main Slate')),
        p('*May not consider injured or suspended players'),
        p('*Only an initial guide towards creating a DFS team'),
