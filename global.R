@@ -7,6 +7,7 @@ library(plotly)
 library(xgboost)
 library(ggplot2)
 library(data.table)
+library(fuzzyjoin)
 library(shinythemes)
 
 source("functions.R")
