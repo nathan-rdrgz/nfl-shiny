@@ -51,7 +51,10 @@ navbarPage(
                             max = ifelse(currentWeek-1<=0,1,currentWeek-1),
                             step = 1,
                             value = ifelse(currentWeek > 17,
-                                           10, ifelse(currentWeek-2<=0,1,currentWeek-2))
+                                           10, 
+                                           ifelse(currentWeek-2<=0,
+                                                  1,
+                                                  currentWeek-2))
                             )
            ),
            mainPanel(
@@ -96,15 +99,15 @@ navbarPage(
          selected = NULL,
          multiple = TRUE),
        # min avg points to exclude
-       sliderInput(
-         inputId = 'minPoints',
-         label = 'Set miniumum points threshold, i.e., 
-         remove players who have not scored above a x points in a single game',
-         min = 0,
-         max = 10,
-         step = 1,
-         value = 0
-       ),
+       # sliderInput(
+       #   inputId = 'minPoints',
+       #   label = 'Set miniumum points threshold, i.e., 
+       #   remove players who have not scored above a x points in a single game',
+       #   min = 0,
+       #   max = 10,
+       #   step = 1,
+       #   value = 0
+       # ),
        # Min games played removed
        sliderInput(
          inputId = 'min_games_played',
@@ -132,7 +135,10 @@ navbarPage(
     mainPanel(
       # Predicted points, Actual points, salary cap %
       # table of optimized lineup
-      h1(paste0('Predictions and lineup optimizations will be back for the \'21 season')),
+      h1(
+        paste0(
+          'Predictions and lineup optimization will be back for the \'21 season'
+          )),
        h2(paste0('Optimal Lineup* - Saturday Playoffs Main Slate')),
        p('*May not consider injured or suspended players'),
        p('*Only an initial guide towards creating a DFS team'),

@@ -5,8 +5,8 @@ account: nathanrdrgz
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3433216
-bundleId: 4130738
+bundleId: 4616971
 url: https://nathanrdrgz.shinyapps.io/nfl-shiny/
-when: 1611341044.45408
+when: 1621444642.26514
 asMultiple: FALSE
 asStatic: FALSE

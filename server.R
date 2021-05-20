@@ -152,9 +152,10 @@ shiny::shinyServer(function(session, input, output) {
          }, filter = 'top')
        
        # perform optimzation ----------------------------------------------------
+       #browser()
        resultsDT2 <- resultsDT[!Name %chin% playersToAvoid]
        resultsDT2 <- resultsDT2[!Team %in%rg_teamList]
-       resultsDT2 <- resultsDT2[`Median Points` > minPoints2]
+       #resultsDT2 <- resultsDT2[`Minimum Points`> minPoints2]
        resultsDT2[, pred_rank := frank(-Predicted), .(Pos)]
        resultsDT2[, team_pct := sum(Predicted, na.rm = T), .(Team)]
        resultsDT2[, pred_team_pct := round(Predicted/team_pct, 2)]
