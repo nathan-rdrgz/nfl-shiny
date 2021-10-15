@@ -72,7 +72,7 @@ shiny::shinyServer(function(session, input, output) {
        # Weekly Predictions
        # Grab salary data from Fanduel
        newLOC <- 'data/'
-       newCSV <- 'FanDuel-NFL-2021-01-09-53152-players-list.csv'
+       newCSV <- 'FanDuel-NFL-2021 ET-10 ET-17 ET-65217-players-list.csv'# 'FanDuel-NFL-2021-01-09-53152-players-list.csv'
        newCSV <- paste0(newLOC, newCSV)
        
       # # Merge with FanDuel names
