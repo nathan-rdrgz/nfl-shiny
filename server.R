@@ -72,7 +72,7 @@ shiny::shinyServer(function(session, input, output) {
        # Weekly Predictions
        # Grab salary data from Fanduel
        newLOC <- 'data/'
-       newCSV <- 'FanDuel-NFL-2021 ET-10 ET-17 ET-65217-players-list.csv'# 'FanDuel-NFL-2021-01-09-53152-players-list.csv'
+       newCSV <- 'FanDuel-NFL-2022 ET-01 ET-02 ET-69306-players-list.csv'
        newCSV <- paste0(newLOC, newCSV)
        
       # # Merge with FanDuel names
@@ -147,9 +147,16 @@ shiny::shinyServer(function(session, input, output) {
                                `Median Points` = wk14DT$median_pts)
        playersToAvoid <- newDT[Played<=minGamesPlayed | 
                                  `Injury Indicator`%in% c("IR", "O"), Name]
-       output$all_preds <- renderDT({
+       output$all_preds <- DT::renderDataTable(server=FALSE,
+                                    filter='top',
+                                    extensions=c("Buttons", "Scroller"),
+                                    options = list(deferRender=T,scrollY=200,
+                                                   scroller=T,dom='tipB',
+                                                   scrollX=T,
+                                                   buttons=c('copy','csv','excel')),
+                                    {
          resultsDT[!Name %chin% playersToAvoid][!Team %in%rg_teamList]
-         }, filter = 'top')
+         })
        
        # perform optimzation ----------------------------------------------------
        #browser()
@@ -191,7 +198,7 @@ shiny::shinyServer(function(session, input, output) {
                       "==",
                       "==",
                       #rep("<=", num.players),
-                      "<=")
+                      "=")
        rhs <- c(1, # Quartbacks
                 2, # RB Min
                 3, # RB Max

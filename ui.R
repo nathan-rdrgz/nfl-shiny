@@ -135,11 +135,11 @@ navbarPage(
     mainPanel(
       # Predicted points, Actual points, salary cap %
       # table of optimized lineup
-      h1(
-        paste0(
-          'Predictions and lineup optimization will be back for the \'21 season'
-          )),
-       h2(paste0('Optimal Lineup* - Saturday Playoffs Main Slate')),
+      #h1(
+      #  paste0(
+      #    'Predictions and lineup optimization will be back for the \'21 season'
+      #    )),
+       h2(paste0('Optimal Lineup* - Sunday (2022-01-02) Playoffs Main Slate')),
        p('*May not consider injured or suspended players'),
        p('*Only an initial guide towards creating a DFS team'),
        DT::dataTableOutput('optimal_results'),
